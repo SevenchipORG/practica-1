@@ -53,6 +53,7 @@ def generar_datos():
                 datos.append(lectura)
 
 
+# Consulta 1 (lo cambie porque use el for xd
 def temperatura_por_zona():
     zona = input("Digite la zona: ")
 
@@ -60,9 +61,12 @@ def temperatura_por_zona():
         print("Zona no encontrada.")
         return
 
-    zona_datos = list(filter(lambda x: x["zona"] == zona, datos))
+    zona_datos = list(filter(
+        lambda x: x["zona"] == zona,
+        datos
+    ))
 
-    for hora in range(24):
+    def promedio_hora(hora):
         texto_hora = f"{hora:02d}:"
 
         lecturas = list(filter(
@@ -70,23 +74,49 @@ def temperatura_por_zona():
             zona_datos
         ))
 
-        temperaturas = list(map(lambda x: x["temperatura"], lecturas))
+        temperaturas = list(map(
+            lambda x: x["temperatura"],
+            lecturas
+        ))
+
         promedio = sum(temperaturas) / len(temperaturas)
 
-        print(f"{hora:02d}:00 -> {promedio:.1f} °C")
+        return f"{hora:02d}:00 -> {promedio:.1f} °C"
+
+    resultados = list(map(promedio_hora, range(24)))
+
+    print("\n".join(resultados))
 
 
 #2
+# Consulta 2
 def dia_mas_caluroso():
-    for zona in estaciones:
-        zona_datos = list(filter(lambda x: x["zona"] == zona, datos))
-        mayor = max(zona_datos, key=lambda x: x["temperatura"])
 
-        print(zona, "-", mayor["dia"], mayor["hora"],
-              "-", mayor["temperatura"], "°C")
+    def buscar_mayor(zona):
+        zona_datos = list(filter(
+            lambda x: x["zona"] == zona,
+            datos
+        ))
+
+        mayor = max(
+            zona_datos,
+            key=lambda x: x["temperatura"]
+        )
+
+        return (
+            zona + " - " +
+            mayor["dia"] + " " +
+            mayor["hora"] + " - " +
+            str(mayor["temperatura"]) + " °C"
+        )
+
+    resultados = list(map(buscar_mayor, estaciones))
+
+    print("\n".join(resultados))
 
 
 # 3
+# Consulta 3
 def fluctuacion_presion():
     dia = input("Digite el dia: ").capitalize()
 
@@ -94,25 +124,37 @@ def fluctuacion_presion():
         print("Dia no valido.")
         return
 
-    for zona in estaciones:
+    def calcular_presion(zona):
         lecturas = list(filter(
             lambda x: x["zona"] == zona and x["dia"] == dia,
             datos
         ))
 
-        presiones = list(map(lambda x: x["presion"], lecturas))
+        presiones = list(map(
+            lambda x: x["presion"],
+            lecturas
+        ))
 
         minima = min(presiones)
         maxima = max(presiones)
+        diferencia = maxima - minima
 
-        print(zona,
-              "- Min:", minima,
-              "Max:", maxima,
-              "Fluctuacion:", round(maxima - minima, 1), "hPa")
+        return (
+            zona +
+            " - Min: " + str(minima) +
+            " Max: " + str(maxima) +
+            " Fluctuacion: " + str(round(diferencia, 1)) +
+            " hPa"
+        )
+
+    resultados = list(map(calcular_presion, estaciones))
+
+    print("\n".join(resultados))
 
 
 # 4
 def buscar_bochorno():
+
     alertas = list(filter(
         lambda x: x["temperatura"] > 32 and x["humedad"] > 80,
         datos
@@ -128,12 +170,18 @@ def buscar_bochorno():
         print("No se encontraron alertas.")
         return
 
-    # solo 30 para no llenar la pantalla
-    for alerta in alertas[:30]:
-        print(alerta["zona"], "-", alerta["dia"], alerta["hora"],
-              "- Temp:", alerta["temperatura"], "°C",
-              "- Humedad:", alerta["humedad"], "%")
+    def mostrar_alerta(alerta):
+        return (
+            alerta["zona"] + " - " +
+            alerta["dia"] + " " +
+            alerta["hora"] +
+            " - Temp: " + str(alerta["temperatura"]) + " °C" +
+            " - Humedad: " + str(alerta["humedad"]) + " %"
+        )
 
+    resultados = list(map(mostrar_alerta, alertas))
+
+    print("\n".join(resultados))
 
 # 1
 
