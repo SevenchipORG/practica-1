@@ -20,14 +20,3 @@ El programa permite:
 2. Encontrar el día y la hora más calurosos de cada estacion
 3. Consultar la fluctuación de la presión barometrica
 4. Detectar alertas de bochorno cuando la temperatura supera los 32 °C y la humedad supera el 80 %
-
-## Herramientas utilizadas
-
-Python
-Listas
-Diccionarios
-Funciones
-map()
-filter()
-lambda
-sorted()
